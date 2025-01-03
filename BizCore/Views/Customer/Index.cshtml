@@ -1,0 +1,52 @@
+﻿@model IEnumerable<BizCore.Models.Customers>
+
+@{
+    ViewData["Title"] = "Customers List";
+}
+
+<h1>Customers List</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Add New Customer</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Customer ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var customer in Model)
+            {
+                <tr>
+                    <td>@customer.CustomerId</td>
+                    <td>@customer.Name</td>
+                    <td>@customer.Address</td>
+                    <td>@customer.City</td>
+                    <td>@customer.Phone</td>
+                    <td>@customer.Email</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@customer.CustomerId" class="btn btn-info btn-sm">Details</a>
+                        <a asp-action="Edit" asp-route-id="@customer.CustomerId" class="btn btn-warning btn-sm">Edit</a>
+                        <a asp-action="Delete" asp-route-id="@customer.CustomerId" class="btn btn-danger btn-sm">Delete</a>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center">No customers found.</td>
+            </tr>
+        }
+    </tbody>
+</table>

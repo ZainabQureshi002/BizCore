@@ -1,0 +1,26 @@
+﻿@model Products
+
+@{
+    ViewData["Title"] = "Product Details";
+}
+<h1>Product Details</h1>
+<div>
+    <h4>Product</h4>
+    <hr/>
+    <dl class="row">
+        <dt class="col-sm-2">Name</dt>
+        <dd class="col-sm-10">@Model.Name</dd>
+        <dt class="col-sm-2">Description</dt>
+        <dd class="col-sm-10">@Model.Description</dd>
+
+        <dt class="col-sm-2">Purchase Price</dt>
+        <dd class="col-sm-10">@Model.PurchasePrice.ToString("C")</dd>
+
+        <dt class="col-sm-2">Sales Price</dt>
+        <dd class="col-sm-10">@Model.SalesPrice.ToString("C")</dd>
+
+        <dt class="col-sm-2">In Stock</dt>
+        <dd class="col-sm-10">@Model.InStock</dd>
+    </dl>
+</div>
+<a asp-action="Index" class="btn btn-secondary">Back to List</a>
