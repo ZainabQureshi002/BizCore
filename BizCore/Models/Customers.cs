@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace BizCore.Models
 {
@@ -21,6 +22,8 @@ namespace BizCore.Models
 
        
         public string Email { get; set; }
+        // Navigation property
+        [ValidateNever]
 
         public ICollection<Orders> Order { get; set; }
     }

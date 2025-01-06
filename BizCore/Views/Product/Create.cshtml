@@ -1,42 +1,47 @@
-﻿@model Products
+﻿@model BizCore.Models.Products
 
-@{
-    ViewData["Title"] = "Create Product";
-}
-
-<h1>Create Product</h1>
-
-<form asp-action="Create">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
+        <label for="Name">Product Name</label>
+        <input type="text" asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="Description" class="control-label"></label>
+        <label for="Description">Description</label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="Picture" class="control-label"></label>
-        <input asp-for="Picture" class="form-control" />
-        <span asp-validation-for="Picture" class="text-danger"></span>
+        <label for="ImageFile">Upload Picture</label>
+        <input type="file" asp-for="ImageFile" class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="PurchasePrice" class="control-label"></label>
-        <input asp-for="PurchasePrice" class="form-control" />
+        <label for="PurchasePrice">Purchase Price</label>
+        <input type="number" asp-for="PurchasePrice" class="form-control" step="0.01" />
         <span asp-validation-for="PurchasePrice" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="SalesPrice" class="control-label"></label>
-        <input asp-for="SalesPrice" class="form-control" />
+        <label for="SalesPrice">Sales Price</label>
+        <input type="number" asp-for="SalesPrice" class="form-control" step="0.01" />
         <span asp-validation-for="SalesPrice" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="InStock" class="control-label"></label>
-        <input asp-for="InStock" class="form-control" />
+        <label for="InStock">In Stock</label>
+        <input type="number" asp-for="InStock" class="form-control" />
         <span asp-validation-for="InStock" class="text-danger"></span>
     </div>
+
     <button type="submit" class="btn btn-primary">Create</button>
-    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
+
+@* @section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+} *@
