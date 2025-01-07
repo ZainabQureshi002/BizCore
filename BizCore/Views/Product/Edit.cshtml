@@ -1,4 +1,4 @@
-﻿@model Products
+﻿@model BizCore.Models.Products
 
 @{
     ViewData["Title"] = "Edit Product";
@@ -6,38 +6,59 @@
 
 <h1>Edit Product</h1>
 
-<form asp-action="Edit">
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="ProductId" />
+
     <div class="form-group">
         <label asp-for="Name" class="control-label"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
+
     <div class="form-group">
         <label asp-for="Description" class="control-label"></label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
+
     <div class="form-group">
-        <label asp-for="PictureUrl" class="control-label"></label>
-        <input asp-for="PictureUrl" class="form-control" />
-        <span asp-validation-for="PictureUrl" class="text-danger"></span>
+        <label for="ImageFile">Upload New Picture</label>
+        <input type="file" asp-for="ImageFile" class="form-control" />
+        <span asp-validation-for="ImageFile" class="text-danger"></span>
     </div>
+
+    @if (!string.IsNullOrEmpty(Model.PictureUrl))
+    {
+        <div class="form-group">
+            <label>Current Picture:</label>
+            <img src="@Model.PictureUrl" alt="Product Image" class="img-thumbnail" style="max-width:150px;" />
+        </div>
+    }
+
     <div class="form-group">
         <label asp-for="PurchasePrice" class="control-label"></label>
-        <input asp-for="PurchasePrice" class="form-control" />
+        <input asp-for="PurchasePrice" class="form-control" step="0.01" />
         <span asp-validation-for="PurchasePrice" class="text-danger"></span>
     </div>
+
     <div class="form-group">
         <label asp-for="SalesPrice" class="control-label"></label>
-        <input asp-for="SalesPrice" class="form-control" />
+        <input asp-for="SalesPrice" class="form-control" step="0.01" />
         <span asp-validation-for="SalesPrice" class="text-danger"></span>
     </div>
+
     <div class="form-group">
         <label asp-for="InStock" class="control-label"></label>
         <input asp-for="InStock" class="form-control" />
         <span asp-validation-for="InStock" class="text-danger"></span>
     </div>
+
     <button type="submit" class="btn btn-primary">Save</button>
     <a asp-action="Index" class="btn btn-secondary">Cancel</a>
 </form>
+
+@* @section Scripts { *@
+@*     @{ *@
+@*         await Html.RenderPartialAsync("_ValidationScriptsPartial"); *@
+@*     } *@
+}

@@ -1,7 +1,17 @@
 ﻿@model IEnumerable<BizCore.Models.Products>
 
-<table class="table">
-    <thead>
+@{
+    ViewData["Title"] = "Product List";
+}
+
+<h1>Product List</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-success">Create New Product</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
         <tr>
             <th>Product Name</th>
             <th>Picture</th>
@@ -26,12 +36,19 @@
                         <span>No Image</span>
                     }
                 </td>
-                <td>@product.PurchasePrice</td>
-                <td>@product.SalesPrice</td>
+                <td>@product.PurchasePrice.ToString("C")</td>
+                <td>@product.SalesPrice.ToString("C")</td>
                 <td>@product.InStock</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@product.ProductId" class="btn btn-info">Details</a>
-                    <a asp-action="Edit" asp-route-id="@product.ProductId" class="btn btn-warning">Edit</a>
+                    <a asp-action="Details" asp-route-id="@product.ProductId" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Edit" asp-route-id="@product.ProductId" class="btn btn-warning btn-sm">Edit</a>
+
+                    <!-- Delete Form -->
+                    <form asp-action="Delete" asp-route-id="@product.ProductId" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this product?');">
+                            Delete
+                        </button>
+                    </form>
                 </td>
             </tr>
         }

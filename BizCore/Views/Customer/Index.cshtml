@@ -4,7 +4,7 @@
     ViewData["Title"] = "Customers List";
 }
 
-<h1>Customers List</h1>
+<h1>@ViewData["Title"]</h1>
 
 <p>
     <a asp-action="Create" class="btn btn-primary">Add New Customer</a>
@@ -35,9 +35,15 @@
                     <td>@customer.Phone</td>
                     <td>@customer.Email</td>
                     <td>
-                        <a asp-action="Details" asp-route-id="@customer.CustomerId" class="btn btn-info btn-sm">Details</a>
-                        <a asp-action="Edit" asp-route-id="@customer.CustomerId" class="btn btn-warning btn-sm">Edit</a>
-                        <a asp-action="Delete" asp-route-id="@customer.CustomerId" class="btn btn-danger btn-sm">Delete</a>
+                        <div class="d-flex">
+                            <a asp-action="Details" asp-route-id="@customer.CustomerId" class="btn btn-info btn-sm me-2">Details</a>
+                            <a asp-action="Edit" asp-route-id="@customer.CustomerId" class="btn btn-warning btn-sm me-2">Edit</a>
+                            <form asp-action="Delete" asp-route-id="@customer.CustomerId" method="post" style="display:inline;">
+                                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this customer?');">
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
             }

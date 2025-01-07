@@ -82,6 +82,7 @@ namespace BizCore.Controllers
 
 
         // GET: Products/Edit/5
+        [HttpGet]
         public IActionResult Edit(int id)
         {
             var product = _context.Products.FirstOrDefault(p => p.ProductId == id);
