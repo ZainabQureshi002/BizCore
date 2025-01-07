@@ -6,30 +6,39 @@
 
 <h1>Delete Customer</h1>
 
-<h3>Are you sure you want to delete this customer?</h3>
+<form asp-action="DeleteConfirmed" asp-route-id="@Model.CustomerId" method="post">
+    @Html.AntiForgeryToken()
 
-<div>
-    <h4>Customer Details</h4>
-    <dl class="row">
-        <dt class="col-sm-2">Name</dt>
-        <dd class="col-sm-10">@Model.Name</dd>
+    <div class="alert alert-danger">
+        <h4>Are you sure you want to delete this customer?</h4>
+        <p>This action cannot be undone.</p>
+    </div>
 
-        <dt class="col-sm-2">Address</dt>
-        <dd class="col-sm-10">@Model.Address</dd>
+    <div class="form-group">
+        <label>Name:</label>
+        <p class="form-control-static">@Model.Name</p>
+    </div>
 
-        <dt class="col-sm-2">City</dt>
-        <dd class="col-sm-10">@Model.City</dd>
+    <div class="form-group">
+        <label>Address:</label>
+        <p class="form-control-static">@Model.Address</p>
+    </div>
 
-        <dt class="col-sm-2">Phone</dt>
-        <dd class="col-sm-10">@Model.Phone</dd>
+    <div class="form-group">
+        <label>City:</label>
+        <p class="form-control-static">@Model.City</p>
+    </div>
 
-        <dt class="col-sm-2">Email</dt>
-        <dd class="col-sm-10">@Model.Email</dd>
-    </dl>
+    <div class="form-group">
+        <label>Phone:</label>
+        <p class="form-control-static">@Model.Phone</p>
+    </div>
 
-    <!-- Form to submit the delete action -->
-    <form method="post" action="@Url.Action("DeleteConfirmed", "Customer", new { id = Model.CustomerId })">
-        <button type="submit" class="btn btn-danger">Delete</button>
-        <a href="@Url.Action("Index", "Customer")" class="btn btn-secondary">Cancel</a>
-    </form>
-</div>
+    <div class="form-group">
+        <label>Email:</label>
+        <p class="form-control-static">@Model.Email</p>
+    </div>
+
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
