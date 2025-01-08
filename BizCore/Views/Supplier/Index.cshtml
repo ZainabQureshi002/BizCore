@@ -1,43 +1,48 @@
 ﻿@model IEnumerable<BizCore.Models.Suppliers>
 @{
-	ViewData["Titles"] = "Supplier List";
-
+    ViewData["Title"] = "Supplier List";
 }
+
 <h1>Supplier List</h1>
+
 <p>
-	<a asp-action="Create" asp-controller="Supplier">Create</a>
-<p/>
-<table>
-	<thead class="thead-dark">
-		<tr>
-			<th>Supplier ID</th>
-			<th>Name</th>
-			<th>Address</th>
-			<th>City</th>
-			<th>Phone</th>
-			<th>Email</th>
-			<th>Actions</th>
-		</tr>
-	</thead>
-	<tbody>
-		@foreach(var supplier in Model)
-		{
-			<tr>
-				<td>@supplier.SupplierId</td>
-				<td>@supplier.Name</td>
-				<td>@supplier.Address</td>
-				<td>@supplier.City</td>
-				<td>@supplier.Phone</td>
-				<td>@supplier.Email</td>
-				<td>
-					<a asp-action="Details" asp-route-Id="@supplier.SupplierId" class="btn btn-info btn-sm">Details</a>
-					<a asp-action="Details" asp-route-Id="@supplier.SupplierId" class="btn btn-warning btn-sm"></a>
-					<form  asp-action="Details" asp-route-Id="@supplier.SupplierId" method="post" style="displayInline;"> 
-					<button type ="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this supplier?')">Delete<button/>
-						</form>/>
-				</td>
-			</tr>
-		}
-		
-	</tbody>
+    <a asp-action="Create" asp-controller="Supplier" class="btn btn-primary">Add New Supplier</a>
+</p>
+
+<table class="table table-bordered table-striped">
+    <thead class="thead-dark">
+        <tr>
+            <th>Supplier ID</th>
+            <th>Name</th>
+            <th>Address</th>
+            <th>City</th>
+            <th>Phone</th>
+            <th>Email</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var supplier in Model)
+        {
+            <tr>
+                <td>@supplier.SupplierId</td>
+                <td>@supplier.Name</td>
+                <td>@supplier.Address</td>
+                <td>@supplier.City</td>
+                <td>@supplier.Phone</td>
+                <td>@supplier.Email</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@supplier.SupplierId" class="btn btn-info btn-sm">Details</a>
+                    <a asp-action="Edit" asp-route-id="@supplier.SupplierId" class="btn btn-warning btn-sm">Edit</a>
+                    <form asp-action="Delete" asp-route-id="@supplier.SupplierId" method="post" style="display: inline;">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-danger btn-sm"
+                         onclick="return confirm('Are you sure you want to delete this supplier?');">
+                            Delete
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
 </table>
