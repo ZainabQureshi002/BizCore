@@ -45,7 +45,7 @@ namespace BizCore.Controllers
         // POST: Products/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Products model)
+        public IActionResult Create(Product model)
         {
             if (ModelState.IsValid)
             {
@@ -95,7 +95,7 @@ namespace BizCore.Controllers
         // POST: Products/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Products model)
+        public IActionResult Edit(int id, Product model)
         {
             if (id != model.ProductId)
                 return NotFound();

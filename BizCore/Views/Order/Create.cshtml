@@ -1,0 +1,194 @@
+﻿@model BizCore.Models.ViewModels.OrderCreateViewModel
+
+@{
+	ViewData["Title"] = "Create Order";
+}
+
+<h2 class="text-center my-4">Create Order</h2>
+
+<form asp-action="Create" method="post" class="p-4 border rounded shadow-sm bg-light">
+	<div class="form-group">
+		<!-- Order Type Selection -->
+		<div class="row">
+			<div class="col-md-6 mb-3">
+				<label asp-for="Order.OrderTypeId" class="form-label">Order Type</label>
+				<select asp-for="Order.OrderTypeId" class="form-select" id="orderTypeSelect">
+					<option value="">-- Select Order Type --</option>
+					<option value="1">Customer Order</option>
+					<option value="0">Supplier Order</option>
+				</select>
+				<span asp-validation-for="Order.OrderTypeId" class="text-danger"></span>
+			</div>
+		</div>
+
+
+		@* <div class="row"> *@
+		@* 	<div class="col-md-6 mb-3" id="OrderTypeDiv"> *@
+		@* 		<label asp-for="Order.OrderTypeId" class="form-label">Order Type</label> *@
+		@* 		<select asp-for="Order.OrderTypeId" class="form-select" asp-items="Model."></select> *@
+		@* 		<span asp-validation-for="Order.CustomerId" class="text-danger"></span> *@
+		@* 	</div> *@
+		@* </div> *@
+
+		<!-- Customer Selection -->
+		<div class="row">
+			<div class="col-md-6 mb-3" id="customerDiv" style="display:none;">
+				<label asp-for="Order.CustomerId" class="form-label">Customer</label>
+				<select asp-for="Order.CustomerId" class="form-select" asp-items="Model.Customers"></select>
+				<span asp-validation-for="Order.CustomerId" class="text-danger"></span>
+			</div>
+		</div>
+
+		<div class="row">
+			<!-- Supplier Selection -->
+			<div class="col-md-6 mb-3" id="supplierDiv" style="display:none;">
+				<label asp-for="Order.SupplierId" class="form-label">Supplier</label>
+				<select asp-for="Order.SupplierId" class="form-select" asp-items="Model.Suppliers"></select>
+				<span asp-validation-for="Order.SupplierId" class="text-danger"></span>
+			</div>
+		</div>
+
+		<!-- Order Date -->
+		<div class="row">
+			<div class="col-md-6 mb-3">
+				<label asp-for="Order.OrderDate" class="form-label">Order Date</label>
+				<input asp-for="Order.OrderDate" class="form-control" type="date" />
+				<span asp-validation-for="Order.OrderDate" class="text-danger"></span>
+			</div>
+		</div>
+	</div>
+
+	<h3 class="text-center mt-4">Order Items</h3>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>Product</th>
+				<th>Quantity</th>
+				<th>Unit Price</th>
+				<th>Total Price</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody id="orderItemsContainer">
+			@for (int i = 0; i < Model.Order.OrderItems.Count; i++)
+			{
+				<tr id="orderItem_@i">
+					<td>
+						<select asp-for="Order.OrderItems[@i].ProductId" class="form-select" asp-items="Model.Products"></select>
+						<span asp-validation-for="Order.OrderItems[@i].ProductId" class="text-danger"></span>
+					</td>
+					<td>
+						<input asp-for="Order.OrderItems[@i].Quantity" class="form-control" type="number" min="1" oninput="calculateTotalPrice(@i)" />
+						<span asp-validation-for="Order.OrderItems[@i].Quantity" class="text-danger"></span>
+					</td>
+					<td>
+						<input asp-for="Order.OrderItems[@i].UnitPrice" class="form-control" type="number" step="0.01" oninput="calculateTotalPrice(@i)" />
+						<span asp-validation-for="Order.OrderItems[@i].UnitPrice" class="text-danger"></span>
+					</td>
+					<td>
+						<input type="text" id="totalPrice_@i" class="form-control" readonly />
+					</td>
+					<td>
+						<button type="button" class="btn btn-sm btn-danger" onclick="removeOrderItem(@i)">Remove</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+
+	<h4 class="text-center mt-4">Total Order Price</h4>
+	<div class="form-group">
+		<label class="form-label">Total Order Price</label>
+		<input type="text" id="totalOrderPrice" class="form-control" readonly />
+	</div>
+
+	<button type="button" class="btn btn-primary mt-3" id="addOrderItemBtn">Add Item</button>
+	<button type="submit" class="btn btn-success mt-4 w-100">Create Order</button>
+</form>
+
+@section Scripts {
+	<script>
+		// Dynamically hide/show Customer and Supplier fields based on Order Type
+		document.getElementById("orderTypeSelect").addEventListener("change", function () {
+			const orderType = this.value;
+			const customerDiv = document.getElementById("customerDiv");
+			const supplierDiv = document.getElementById("supplierDiv");
+
+			if (orderType === "1") {
+				customerDiv.style.display = "block";
+				supplierDiv.style.display = "none";
+			} else if (orderType === "0") {
+				customerDiv.style.display = "none";
+				supplierDiv.style.display = "block";
+			} else {
+				customerDiv.style.display = "none";
+				supplierDiv.style.display = "none";
+			}
+		});
+
+		let itemCount = @Model.Order.OrderItems.Count;
+
+		// Add new Order Item
+		document.getElementById("addOrderItemBtn").onclick = function () {
+			const container = document.getElementById("orderItemsContainer");
+
+			const newItemHTML = `
+				<tr id="orderItem_${itemCount}">
+					<td>
+						<select name="Order.OrderItems[${itemCount}].ProductId" class="form-select" asp-items="Model.Products"></select>
+					</td>
+					<td>
+						<input type="number" name="Order.OrderItems[${itemCount}].Quantity" class="form-control" min="1" oninput="calculateTotalPrice(${itemCount})" />
+					</td>
+					<td>
+						<input type="number" name="Order.OrderItems[${itemCount}].UnitPrice" class="form-control" step="0.01" oninput="calculateTotalPrice(${itemCount})" />
+					</td>
+					<td>
+						<input type="text" id="totalPrice_${itemCount}" class="form-control" readonly />
+					</td>
+					<td>
+						<button type="button" class="btn btn-sm btn-danger" onclick="removeOrderItem(${itemCount})">Remove</button>
+					</td>
+				</tr>
+			`;
+
+			container.insertAdjacentHTML("beforeend", newItemHTML);
+			itemCount++;
+		};
+
+		// Remove Order Item
+		function removeOrderItem(index) {
+			const container = document.getElementById("orderItemsContainer");
+			const itemToRemove = document.getElementById(`orderItem_${index}`);
+			container.removeChild(itemToRemove);
+
+			// Recalculate the total price after item removal
+			calculateTotalOrderPrice();
+		}
+
+		// Calculate the total price for an order item
+		function calculateTotalPrice(index) {
+			const quantity = parseFloat(document.querySelector(`#orderItem_${index} input[name='Order.OrderItems[${index}].Quantity']`).value) || 0;
+			const unitPrice = parseFloat(document.querySelector(`#orderItem_${index} input[name='Order.OrderItems[${index}].UnitPrice']`).value) || 0;
+			const totalPrice = (quantity * unitPrice).toFixed(2);
+
+			document.getElementById(`totalPrice_${index}`).value = totalPrice;
+
+			// Recalculate the total order price
+			calculateTotalOrderPrice();
+		}
+
+		// Calculate the total price for the entire order
+		function calculateTotalOrderPrice() {
+			let totalOrderPrice = 0;
+			const orderItems = document.querySelectorAll('.orderItem');
+
+			orderItems.forEach(item => {
+				const totalPrice = parseFloat(item.querySelector('input[id^="totalPrice_"]').value) || 0;
+				totalOrderPrice += totalPrice;
+			});
+
+			document.getElementById('totalOrderPrice').value = totalOrderPrice.toFixed(2);
+		}
+	</script>
+}

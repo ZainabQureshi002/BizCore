@@ -40,7 +40,7 @@ namespace BizCore.Controllers
 
         [HttpPost]
       
-        public IActionResult Create(Suppliers supplier)
+        public IActionResult Create(Supplier supplier)
         {
             if (ModelState.IsValid)
             {
@@ -63,7 +63,7 @@ namespace BizCore.Controllers
             return View(supplier);
         }
         [HttpPost]
-        public IActionResult Edit(Suppliers supplier)
+        public IActionResult Edit(Supplier supplier)
         {
             if (ModelState.IsValid)
             {

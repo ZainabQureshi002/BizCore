@@ -41,8 +41,7 @@ namespace BizCore.Controllers
 
         // POST: Customer/Create
         [HttpPost]
-       
-        public IActionResult Create([Bind("Name,Address,City,Phone,Email")] Customers customer)
+        public IActionResult Create([Bind("Name,Address,City,Phone,Email")] Customer customer)
         {
             if (ModelState.IsValid)
             {
@@ -68,7 +67,7 @@ namespace BizCore.Controllers
         // POST: Customer/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, [Bind("CustomerId,Name,Address,City,Phone,Email")] Customers customer)
+        public IActionResult Edit(int id, [Bind("CustomerId,Name,Address,City,Phone,Email")] Customer customer)
         {
             if (id != customer.CustomerId)
             {

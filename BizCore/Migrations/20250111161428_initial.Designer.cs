@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BizCore.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250106132428_addedPropToProduct")]
-    partial class addedPropToProduct
+    [Migration("20250111161428_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace BizCore.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BizCore.Models.Customers", b =>
+            modelBuilder.Entity("BizCore.Models.Customer", b =>
                 {
                     b.Property<int>("CustomerId")
                         .ValueGeneratedOnAdd()
@@ -58,39 +58,67 @@ namespace BizCore.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("BizCore.Models.OrderItems", b =>
+            modelBuilder.Entity("BizCore.Models.Order", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("OrderId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
 
-                    b.Property<int>("FK_order")
+                    b.Property<int?>("CustomerId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Fk_OrderType")
+                    b.Property<DateTime>("OrderDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("OrderTypeId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Fk_Product")
+                    b.Property<int?>("SupplierId")
+                        .HasColumnType("int");
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("OrderTypeId");
+
+                    b.HasIndex("SupplierId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("BizCore.Models.OrderItem", b =>
+                {
+                    b.Property<int>("OrderItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderItemId"));
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("OrderTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<decimal>("TotalPrice")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<decimal>("UnitPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.HasKey("Id");
+                    b.HasKey("OrderItemId");
 
-                    b.HasIndex("FK_order");
+                    b.HasIndex("OrderId");
 
-                    b.HasIndex("Fk_OrderType");
+                    b.HasIndex("OrderTypeId");
 
-                    b.HasIndex("Fk_Product");
+                    b.HasIndex("ProductId");
 
                     b.ToTable("OrderItems");
                 });
@@ -103,7 +131,7 @@ namespace BizCore.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderTypeId"));
 
-                    b.Property<string>("Name")
+                    b.Property<string>("OrderTypeName")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
@@ -111,21 +139,9 @@ namespace BizCore.Migrations
                     b.HasKey("OrderTypeId");
 
                     b.ToTable("OrderTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            OrderTypeId = 1,
-                            Name = "Purchase"
-                        },
-                        new
-                        {
-                            OrderTypeId = 2,
-                            Name = "Sale"
-                        });
                 });
 
-            modelBuilder.Entity("BizCore.Models.Products", b =>
+            modelBuilder.Entity("BizCore.Models.Product", b =>
                 {
                     b.Property<int>("ProductId")
                         .ValueGeneratedOnAdd()
@@ -161,7 +177,7 @@ namespace BizCore.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("BizCore.Models.Suppliers", b =>
+            modelBuilder.Entity("BizCore.Models.Supplier", b =>
                 {
                     b.Property<int>("SupplierId")
                         .ValueGeneratedOnAdd()
@@ -190,104 +206,65 @@ namespace BizCore.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("SupplierId");
 
                     b.ToTable("Suppliers");
                 });
 
-            modelBuilder.Entity("Orders", b =>
+            modelBuilder.Entity("BizCore.Models.Order", b =>
                 {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OrderId"));
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Fk_customer")
-                        .IsRequired()
-                        .HasColumnType("int");
-
-                    b.Property<int?>("Fk_supplier")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("OrderDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("OrderType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SupplierId")
-                        .HasColumnType("int");
-
-                    b.Property<decimal>("TotalOrder")
-                        .HasColumnType("decimal(18,2)");
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("CustomerId");
-
-                    b.HasIndex("SupplierId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("BizCore.Models.OrderItems", b =>
-                {
-                    b.HasOne("Orders", "Order")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("FK_order")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.HasOne("BizCore.Models.Customer", "Customer")
+                        .WithMany("Order")
+                        .HasForeignKey("CustomerId");
 
                     b.HasOne("BizCore.Models.OrderType", "OrderType")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("Fk_OrderType")
+                        .WithMany()
+                        .HasForeignKey("OrderTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("BizCore.Models.Products", "Product")
-                        .WithMany("OrderItems")
-                        .HasForeignKey("Fk_Product")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Order");
-
-                    b.Navigation("OrderType");
-
-                    b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Orders", b =>
-                {
-                    b.HasOne("BizCore.Models.Customers", "Customer")
+                    b.HasOne("BizCore.Models.Supplier", "Supplier")
                         .WithMany("Order")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("BizCore.Models.Suppliers", "Supplier")
-                        .WithMany("Order")
-                        .HasForeignKey("SupplierId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SupplierId");
 
                     b.Navigation("Customer");
+
+                    b.Navigation("OrderType");
 
                     b.Navigation("Supplier");
                 });
 
-            modelBuilder.Entity("BizCore.Models.Customers", b =>
+            modelBuilder.Entity("BizCore.Models.OrderItem", b =>
+                {
+                    b.HasOne("BizCore.Models.Order", "Order")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("BizCore.Models.OrderType", null)
+                        .WithMany("OrderItems")
+                        .HasForeignKey("OrderTypeId");
+
+                    b.HasOne("BizCore.Models.Product", "Product")
+                        .WithMany("OrderItems")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Order");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("BizCore.Models.Customer", b =>
                 {
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("BizCore.Models.Order", b =>
+                {
+                    b.Navigation("OrderItems");
                 });
 
             modelBuilder.Entity("BizCore.Models.OrderType", b =>
@@ -295,19 +272,14 @@ namespace BizCore.Migrations
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("BizCore.Models.Products", b =>
+            modelBuilder.Entity("BizCore.Models.Product", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("BizCore.Models.Suppliers", b =>
+            modelBuilder.Entity("BizCore.Models.Supplier", b =>
                 {
                     b.Navigation("Order");
-                });
-
-            modelBuilder.Entity("Orders", b =>
-                {
-                    b.Navigation("OrderItems");
                 });
 #pragma warning restore 612, 618
         }

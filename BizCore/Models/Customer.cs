@@ -3,16 +3,16 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace BizCore.Models
 {
-    public class Customers
+    public class Customer
     {
-        [Key]  // Correct attribute name
+        [Key]  // Corrected attribute name
         public int CustomerId { get; set; }
 
         [Required(ErrorMessage = "Customer name is required.")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Address is required.")]
-        public string Address { get; set; }
+        public string? Address { get; set; }
 
         public string City { get; set; }
 
@@ -20,11 +20,10 @@ namespace BizCore.Models
         [Phone(ErrorMessage = "Invalid phone number format.")]
         public string Phone { get; set; }
 
-       
         public string Email { get; set; }
+
         // Navigation property
         [ValidateNever]
-
-        public ICollection<Orders> Order { get; set; }
+        public ICollection<Order> Order { get; set; }
     }
 }

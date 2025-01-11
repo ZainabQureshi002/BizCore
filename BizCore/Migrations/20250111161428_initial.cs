@@ -3,12 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
-
 namespace BizCore.Migrations
 {
     /// <inheritdoc />
-    public partial class portfolioMigrations : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -36,7 +34,7 @@ namespace BizCore.Migrations
                 {
                     OrderTypeId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    OrderTypeName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -51,10 +49,10 @@ namespace BizCore.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Description = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
-                    Picture = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     PurchasePrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     SalesPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    InStock = table.Column<int>(type: "int", nullable: false)
+                    InStock = table.Column<int>(type: "int", nullable: false),
+                    PictureUrl = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -70,7 +68,6 @@ namespace BizCore.Migrations
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     City = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    State = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
@@ -85,13 +82,10 @@ namespace BizCore.Migrations
                 {
                     OrderId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    OrderType = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Fk_customer = table.Column<int>(type: "int", nullable: false),
-                    CustomerId = table.Column<int>(type: "int", nullable: false),
-                    Fk_supplier = table.Column<int>(type: "int", nullable: true),
-                    SupplierId = table.Column<int>(type: "int", nullable: false),
-                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    TotalOrder = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    CustomerId = table.Column<int>(type: "int", nullable: true),
+                    SupplierId = table.Column<int>(type: "int", nullable: true),
+                    OrderTypeId = table.Column<int>(type: "int", nullable: false),
+                    OrderDate = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -100,81 +94,78 @@ namespace BizCore.Migrations
                         name: "FK_Orders_Customers_CustomerId",
                         column: x => x.CustomerId,
                         principalTable: "Customers",
-                        principalColumn: "CustomerId",
+                        principalColumn: "CustomerId");
+                    table.ForeignKey(
+                        name: "FK_Orders_OrderTypes_OrderTypeId",
+                        column: x => x.OrderTypeId,
+                        principalTable: "OrderTypes",
+                        principalColumn: "OrderTypeId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Orders_Suppliers_SupplierId",
                         column: x => x.SupplierId,
                         principalTable: "Suppliers",
-                        principalColumn: "SupplierId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "SupplierId");
                 });
 
             migrationBuilder.CreateTable(
                 name: "OrderItems",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
+                    OrderItemId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    FK_order = table.Column<int>(type: "int", nullable: false),
-                    Fk_Product = table.Column<int>(type: "int", nullable: false),
-                    Fk_OrderType = table.Column<int>(type: "int", nullable: false),
-                    OrderTypesOrderTypeId = table.Column<int>(type: "int", nullable: false),
+                    OrderId = table.Column<int>(type: "int", nullable: false),
+                    ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     UnitPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    TotalPrice = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    OrderTypeId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItems", x => x.Id);
+                    table.PrimaryKey("PK_OrderItems", x => x.OrderItemId);
                     table.ForeignKey(
-                        name: "FK_OrderItems_OrderTypes_OrderTypesOrderTypeId",
-                        column: x => x.OrderTypesOrderTypeId,
+                        name: "FK_OrderItems_OrderTypes_OrderTypeId",
+                        column: x => x.OrderTypeId,
                         principalTable: "OrderTypes",
-                        principalColumn: "OrderTypeId",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "OrderTypeId");
                     table.ForeignKey(
-                        name: "FK_OrderItems_Orders_FK_order",
-                        column: x => x.FK_order,
+                        name: "FK_OrderItems_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "OrderId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItems_Products_Fk_Product",
-                        column: x => x.Fk_Product,
+                        name: "FK_OrderItems_Products_ProductId",
+                        column: x => x.ProductId,
                         principalTable: "Products",
                         principalColumn: "ProductId",
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.InsertData(
-                table: "OrderTypes",
-                columns: new[] { "OrderTypeId", "Name" },
-                values: new object[,]
-                {
-                    { 1, "Purchase" },
-                    { 2, "Sale" }
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
+                column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_FK_order",
+                name: "IX_OrderItems_OrderTypeId",
                 table: "OrderItems",
-                column: "FK_order");
+                column: "OrderTypeId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_Fk_Product",
+                name: "IX_OrderItems_ProductId",
                 table: "OrderItems",
-                column: "Fk_Product");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_OrderItems_OrderTypesOrderTypeId",
-                table: "OrderItems",
-                column: "OrderTypesOrderTypeId");
+                column: "ProductId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_CustomerId",
                 table: "Orders",
                 column: "CustomerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Orders_OrderTypeId",
+                table: "Orders",
+                column: "OrderTypeId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_SupplierId",
@@ -189,9 +180,6 @@ namespace BizCore.Migrations
                 name: "OrderItems");
 
             migrationBuilder.DropTable(
-                name: "OrderTypes");
-
-            migrationBuilder.DropTable(
                 name: "Orders");
 
             migrationBuilder.DropTable(
@@ -199,6 +187,9 @@ namespace BizCore.Migrations
 
             migrationBuilder.DropTable(
                 name: "Customers");
+
+            migrationBuilder.DropTable(
+                name: "OrderTypes");
 
             migrationBuilder.DropTable(
                 name: "Suppliers");

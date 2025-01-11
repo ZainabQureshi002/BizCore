@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace BizCore.Models
 {
-    public class Suppliers
+    public class Supplier
     {
         [Key]
         public int SupplierId { get; set; }
@@ -27,7 +27,7 @@ namespace BizCore.Models
         [EmailAddress(ErrorMessage = "Invalid email address.")]
         public string Email { get; set; }
         [ValidateNever]
-        public ICollection<Orders> Order { get; set; } // If suppliers are linked to orders
+        public ICollection<Order> Order { get; set; } // If suppliers are linked to orders
     }
 }
  

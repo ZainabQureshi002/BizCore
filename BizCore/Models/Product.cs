@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 
 namespace BizCore.Models
 {
-    public class Products
+    public class Product
     {
         [Key]
         public int ProductId { get; set; }
@@ -38,6 +38,6 @@ namespace BizCore.Models
         [NotMapped] // This tells EF Core not to map this property to the database
         public IFormFile? ImageFile { get; set; }
         [ValidateNever]
-        public ICollection<OrderItems> OrderItems { get; set; } = new List<OrderItems>();
+        public ICollection<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
 }
