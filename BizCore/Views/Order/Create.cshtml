@@ -15,7 +15,7 @@
                 <select asp-for="Order.OrderTypeId" class="form-select" id="orderTypeSelect">
                     <option value="">-- Select Order Type --</option>
                     <option value="1">Customer Order</option>
-                    <option value="0">Supplier Order</option>
+                    <option value="2">Supplier Order</option>
                 </select>
                 <span asp-validation-for="Order.OrderTypeId" class="text-danger"></span>
             </div>
@@ -113,7 +113,7 @@
         document.getElementById("orderTypeSelect").addEventListener("change", function () {
             const orderType = this.value;
             document.getElementById("customerDiv").style.display = orderType === "1" ? "block" : "none";
-            document.getElementById("supplierDiv").style.display = orderType === "0" ? "block" : "none";
+            document.getElementById("supplierDiv").style.display = orderType === "2" ? "block" : "none";
         });
 
         // Add a new order item row
