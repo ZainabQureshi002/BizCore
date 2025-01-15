@@ -1,0 +1,41 @@
+﻿@model BizCore.Models.ViewModels.OrderDetailsViewModel
+
+@{
+    ViewData["Title"] = "Order Details";
+}
+<h2 class="TextCenter my-4">Order Details</h2>
+<div class="card mb-4">
+    <div class="card-body">
+        <h4>Order Information</h4>
+        <p><strong>Order ID:</strong>@Model.OrderId</p>
+        <p><strong>Order Type:</strong>@Model.OrderType</p>
+		<p><strong>Customer: </strong>@Model.CustomerName ??"-"</p>
+        <p><strong>Supplier:</strong>@Model.SupplierName ??"-"</p>
+        <p><strong>Order Date:</strong> @Model.OrderDate.ToString("yyyy-MM-dd")</p>
+        <p><strong>Total Price:</strong> @Model.TotalPrice.ToString("C")</p>
+    </div>
+
+</div>
+<h4>Order Items</h4>
+<Table class="table table-bordered table-striped">
+    <thead>
+        <tr>
+            <th>Product</th>
+            <th>Quantity</th>
+            <th>Unit Price</th>
+            <th>Total Price</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model.Items)
+        {
+            <tr>
+                <td>@item.ProductName</td>
+                <td>@item.Quantity</td>
+                <td>@item.UnitPrice.ToString()</td>
+                <td>@item.TotalPrice.ToString()</td>
+            </tr>
+        }
+    </tbody>
+</Table>
+<a asp-action = "Index" class="btn btn-secondary">Back To Orders</a>

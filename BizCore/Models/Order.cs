@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BizCore.Models
 {
@@ -34,4 +35,5 @@ namespace BizCore.Models
         [ValidateNever]
         public List<OrderItem> OrderItems { get; set; } = new List<OrderItem>();
     }
+     
 }

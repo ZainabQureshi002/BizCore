@@ -1,50 +1,54 @@
-﻿@model BizCore.Models.ViewModels.OrderCreateViewModel
+﻿@model BizCore.Models.ViewModels.OrderEditViewModel
 
 @{
-    ViewData["Title"] = "Create Order";
+    ViewData["Title"] = "Edit Order";
 }
 
-<h2 class="text-center my-4">Create Order</h2>
+<h2 class="text-center my-4">Edit Order</h2>
 
-<form asp-action="Create" method="post" class="p-4 border rounded shadow-sm bg-light">
+<form asp-action="Edit" asp-controller="Order" method="post" class="p-4 border rounded shadow-sm bg-light">
     <div class="form-group">
         <!-- Order Type Selection -->
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label asp-for="Order.OrderTypeId" class="form-label">Order Type</label>
-                <select asp-for="Order.OrderTypeId" class="form-select" id="orderTypeSelect">
+                <label asp-for="OrderTypeId" class="form-label">Order Type</label>
+                <select asp-for="OrderTypeId" class="form-select" id="orderTypeSelect">
                     <option value="">-- Select Order Type --</option>
                     <option value="1">Customer Order</option>
                     <option value="0">Supplier Order</option>
                 </select>
-                <span asp-validation-for="Order.OrderTypeId" class="text-danger"></span>
+                <span asp-validation-for="OrderTypeId" class="text-danger"></span>
             </div>
         </div>
 
         <!-- Customer Selection -->
         <div class="row">
-            <div class="col-md-6 mb-3" id="customerDiv" style="display:none;">
-                <label asp-for="Order.CustomerId" class="form-label">Customer</label>
-                <select asp-for="Order.CustomerId" class="form-select" asp-items="Model.Customers"></select>
-                <span asp-validation-for="Order.CustomerId" class="text-danger"></span>
+            <div class="col-md-6 mb-3" id="customerDiv" style="@(Model.OrderTypeId == 1 ? "display:block" : "display:none")">
+                <label asp-for="CustomerId" class="form-label">Customer</label>
+                <select asp-for="CustomerId" class="form-select" asp-items="Model.Customers">
+                    <option value="">-- Select Customer --</option>
+                </select>
+                <span asp-validation-for="CustomerId" class="text-danger"></span>
             </div>
         </div>
 
         <!-- Supplier Selection -->
         <div class="row">
-            <div class="col-md-6 mb-3" id="supplierDiv" style="display:none;">
-                <label asp-for="Order.SupplierId" class="form-label">Supplier</label>
-                <select asp-for="Order.SupplierId" class="form-select" asp-items="Model.Suppliers"></select>
-                <span asp-validation-for="Order.SupplierId" class="text-danger"></span>
+            <div class="col-md-6 mb-3" id="supplierDiv" style="@(Model.OrderTypeId == 0 ? "display:block" : "display:none")">
+                <label asp-for="SupplierId" class="form-label">Supplier</label>
+                <select asp-for="SupplierId" class="form-select" asp-items="Model.Suppliers">
+                    <option value="">-- Select Supplier --</option>
+                </select>
+                <span asp-validation-for="SupplierId" class="text-danger"></span>
             </div>
         </div>
 
         <!-- Order Date -->
         <div class="row">
             <div class="col-md-6 mb-3">
-                <label asp-for="Order.OrderDate" class="form-label">Order Date</label>
-                <input asp-for="Order.OrderDate" class="form-control" type="date" />
-                <span asp-validation-for="Order.OrderDate" class="text-danger"></span>
+                <label asp-for="OrderDate" class="form-label">Order Date</label>
+                <input asp-for="OrderDate" class="form-control" type="date" value="@Model.OrderDate.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="OrderDate" class="text-danger"></span>
             </div>
         </div>
     </div>
@@ -61,26 +65,22 @@
             </tr>
         </thead>
         <tbody id="orderItemsContainer">
-            @for (int i = 0; i < Model.Order.OrderItems.Count; i++)
+            @for (int i = 0; i < Model.OrderItems.Count; i++)
             {
                 <tr id="orderItem_@i">
                     <td>
-                        <select asp-for="Order.OrderItems[@i].ProductId" class="form-select">
+                        <select asp-for="OrderItems[@i].ProductId" class="form-select" asp-items="Model.Products">
                             <option value="">-- Select Product --</option>
-                            @foreach (var product in Model.Products)
-                            {
-                                <option value="@product.Value">@product.Text</option>
-                            }
                         </select>
-                        <span asp-validation-for="Order.OrderItems[@i].ProductId" class="text-danger"></span>
+                        <span asp-validation-for="OrderItems[@i].ProductId" class="text-danger"></span>
                     </td>
                     <td>
-                        <input asp-for="Order.OrderItems[@i].Quantity" class="form-control" type="number" min="1" oninput="calculateTotalPrice(@i)" />
-                        <span asp-validation-for="Order.OrderItems[@i].Quantity" class="text-danger"></span>
+                        <input asp-for="OrderItems[@i].Quantity" class="form-control" type="number" min="1" oninput="calculateTotalPrice(@i)" value="@Model.OrderItems[i].Quantity" />
+                        <span asp-validation-for="OrderItems[@i].Quantity" class="text-danger"></span>
                     </td>
                     <td>
-                        <input asp-for="Order.OrderItems[@i].UnitPrice" class="form-control" type="number" step="0.01" oninput="calculateTotalPrice(@i)" />
-                        <span asp-validation-for="Order.OrderItems[@i].UnitPrice" class="text-danger"></span>
+                        <input asp-for="OrderItems[@i].UnitPrice" class="form-control" type="number" step="0.01" oninput="calculateTotalPrice(@i)" value="@Model.OrderItems[i].UnitPrice" />
+                        <span asp-validation-for="OrderItems[@i].UnitPrice" class="text-danger"></span>
                     </td>
                     <td>
                         <input type="text" id="totalPrice_@i" class="form-control" readonly />
@@ -100,7 +100,7 @@
     </div>
 
     <button type="button" class="btn btn-primary mt-3" id="addOrderItemBtn">Add Item</button>
-    <button type="submit" class="btn btn-success mt-4 w-100">Create Order</button>
+    <button type="submit" class="btn btn-success mt-4 w-100">Update Order</button>
 </form>
 
 @section Scripts {
@@ -108,7 +108,7 @@
         // Serialize the product list passed from the server
         const productList = @Html.Raw(Json.Serialize(Model.Products));
 
-        let itemCount = @Model.Order.OrderItems.Count;
+        let itemCount = @Model.OrderItems.Count;
 
         // Dynamically hide/show Customer and Supplier fields based on Order Type
         document.getElementById("orderTypeSelect").addEventListener("change", function () {
@@ -135,7 +135,7 @@
             const newItemHTML = `
                 <tr id="orderItem_${itemCount}" class="orderItem">
                     <td>
-                        <select name="Order.OrderItems[${itemCount}].ProductId" class="form-select">
+                        <select name="OrderItems[${itemCount}].ProductId" class="form-select">
                             <option value="">-- Select Product --</option>
                             ${productList.map(product => `
                                 <option value="${product.Value}">${product.Text}</option>
@@ -143,10 +143,10 @@
                         </select>
                     </td>
                     <td>
-                        <input type="number" name="Order.OrderItems[${itemCount}].Quantity" class="form-control" min="1" oninput="calculateTotalPrice(${itemCount})" />
+                        <input type="number" name="OrderItems[${itemCount}].Quantity" class="form-control" min="1" oninput="calculateTotalPrice(${itemCount})" />
                     </td>
                     <td>
-                        <input type="number" name="Order.OrderItems[${itemCount}].UnitPrice" class="form-control" step="0.01" oninput="calculateTotalPrice(${itemCount})" />
+                        <input type="number" name="OrderItems[${itemCount}].UnitPrice" class="form-control" step="0.01" oninput="calculateTotalPrice(${itemCount})" />
                     </td>
                     <td>
                         <input type="text" id="totalPrice_${itemCount}" class="form-control" readonly />
@@ -173,8 +173,8 @@
 
         // Calculate the total price for an order item
         function calculateTotalPrice(index) {
-            const quantity = parseFloat(document.querySelector(`#orderItem_${index} input[name='Order.OrderItems[${index}].Quantity']`).value) || 0;
-            const unitPrice = parseFloat(document.querySelector(`#orderItem_${index} input[name='Order.OrderItems[${index}].UnitPrice']`).value) || 0;
+            const quantity = parseFloat(document.querySelector(`#orderItem_${index} input[name='OrderItems[${index}].Quantity']`).value) || 0;
+            const unitPrice = parseFloat(document.querySelector(`#orderItem_${index} input[name='OrderItems[${index}].UnitPrice']`).value) || 0;
             const totalPrice = (quantity * unitPrice).toFixed(2);
 
             document.getElementById(`totalPrice_${index}`).value = totalPrice;
@@ -199,5 +199,4 @@
             document.getElementById('totalOrderPrice').value = totalOrderPrice.toFixed(2);
         }
     </script>
-
 }
