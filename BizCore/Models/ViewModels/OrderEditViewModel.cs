@@ -10,13 +10,13 @@
         public int? SupplierId { get; set; }
         public DateTime OrderDate { get; set; }
         [ValidateNever]
-        public List<OrderItemEditViewModel> OrderItems { get; set; }
+        public List<OrderItemEditViewModel>? OrderItems { get; set; }
         [ValidateNever]
-        public List<SelectListItem> Customers { get; set; }
+        public List<SelectListItem>? Customers { get; set; }
         [ValidateNever]
-        public List<SelectListItem> Suppliers { get; set; }
+        public List<SelectListItem>? Suppliers { get; set; }
         [ValidateNever]
-        public List<SelectListItem> Products { get; set; }
+        public List<SelectListItem>? Products { get; set; }
     }
 
     public class OrderItemEditViewModel

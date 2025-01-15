@@ -11,12 +11,12 @@ namespace BizCore.Models.ViewModels
         };
 
         [ValidateNever]
+        public List<SelectListItem> Customers { get; set; } = new List<SelectListItem>(); // Ensure this is initialized
 
-        public List<SelectListItem> Customers { get; set; }
         [ValidateNever]
-        public List<SelectListItem> Suppliers { get; set; }
-        [ValidateNever]
-        public List<SelectListItem> Products { get; set; }
+        public List<SelectListItem> Suppliers { get; set; } = new List<SelectListItem>(); // Ensure this is initialized
 
+        [ValidateNever]
+        public List<SelectListItem> Products { get; set; } = new List<SelectListItem>(); // Ensure this is initialized
     }
 }

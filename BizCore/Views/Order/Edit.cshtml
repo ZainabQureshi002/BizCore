@@ -6,7 +6,12 @@
 
 <h2 class="text-center my-4">Edit Order</h2>
 
+
+
 <form asp-action="Edit" asp-controller="Order" method="post" class="p-4 border rounded shadow-sm bg-light">
+    
+    <input  asp-for="OrderId"  hidden/>
+
     <div class="form-group">
         <!-- Order Type Selection -->
         <div class="row">
@@ -129,37 +134,36 @@
         });
 
         // Add new Order Item
-        document.getElementById("addOrderItemBtn").onclick = function () {
-            const container = document.getElementById("orderItemsContainer");
+               let itemCount = 0; // Initialize item count outside the function
 
-            const newItemHTML = `
-                <tr id="orderItem_${itemCount}" class="orderItem">
-                    <td>
-                        <select name="OrderItems[${itemCount}].ProductId" class="form-select">
-                            <option value="">-- Select Product --</option>
-                            ${productList.map(product => `
-                                <option value="${product.Value}">${product.Text}</option>
-                            `).join('')}
-                        </select>
-                    </td>
-                    <td>
-                        <input type="number" name="OrderItems[${itemCount}].Quantity" class="form-control" min="1" oninput="calculateTotalPrice(${itemCount})" />
-                    </td>
-                    <td>
-                        <input type="number" name="OrderItems[${itemCount}].UnitPrice" class="form-control" step="0.01" oninput="calculateTotalPrice(${itemCount})" />
-                    </td>
-                    <td>
-                        <input type="text" id="totalPrice_${itemCount}" class="form-control" readonly />
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-sm btn-danger" onclick="removeOrderItem(${itemCount})">Remove</button>
-                    </td>
-                </tr>
-            `;
+        function addOrderItem() {
+            const container = document.getElementById("orderItemsContainer").getElementsByTagName("tbody")[0];
+        const newItemHTML = `
+        <tr id="orderItem_${itemCount}" class="orderItem">
+            <td>
+                <select name="OrderItems[${itemCount}].ProductId" class="form-select">
+                    <option value="">-- Select Product --</option>
+                    ${productList.map(product => `
+                        <option value="${product.Value}">${product.Text}</option>
+                    `).join('')}
+                </select>
+            </td>
+            <td>
+                <input type="number" name="OrderItems[${itemCount}].Quantity" class="form-control" min="1" oninput="calculateTotalPrice(${itemCount})" />
+            </td>
+            <td>
+                <input type="number" name="OrderItems[${itemCount}].UnitPrice" class="form-control" step="0.01" oninput="calculateTotalPrice(${itemCount})" />
+            </td>
+            <td>
+                <input type="text" id="totalPrice_${itemCount}" class="form-control" readonly />
+            </td>
+            <td>
+                <button type="button" class="btn btn-sm btn-danger" onclick="removeOrderItem(${itemCount})">Remove</button>
+            </td>
+        </tr>
+        `;
 
-            container.insertAdjacentHTML("beforeend", newItemHTML);
-            itemCount++;
-        };
+        }
 
         // Remove Order Item
         function removeOrderItem(index) {

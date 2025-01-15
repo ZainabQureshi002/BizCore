@@ -20,6 +20,7 @@ namespace BizCore.Controllers
         {
             var model = new OrderCreateViewModel
             {
+                Order = new Order(),
                 Products = _context.Products.Select(p => new SelectListItem
                 {
                     Text = p.Name,
