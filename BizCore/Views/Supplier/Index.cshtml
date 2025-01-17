@@ -9,7 +9,7 @@
     <a asp-action="Create" asp-controller="Supplier" class="btn btn-primary">Add New Supplier</a>
 </p>
 
-<table class="table table-bordered table-striped">
+<table id="supplierTable" class="table table-bordered table-striped">
     <thead class="thead-dark">
         <tr>
             <th>Supplier ID</th>
@@ -46,3 +46,30 @@
         }
     </tbody>
 </table>
+@section Scripts {
+   
+    <script>
+        $(document).ready(function () {
+            // Initialize DataTable for the supplier table
+            $('#supplierTable').DataTable({
+                paging: true,        // Enable pagination
+                searching: true,     // Enable search box
+                ordering: true,      // Enable column sorting
+                responsive: true,    // Enable responsive table
+                lengthMenu: [5, 10, 25, 50], // Page size options
+                language: {
+                    search: "Search Suppliers:", // Customize the search box placeholder
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ suppliers",
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                }
+            });
+        });
+    </script>
+}
+

@@ -10,7 +10,7 @@
     <a asp-action="Create" class="btn btn-success">Create New Product</a>
 </p>
 
-<table class="table table-bordered table-striped">
+<table id="productTable" class="table table-bordered table-striped">
     <thead class="thead-dark">
         <tr>
             <th>Product Name</th>
@@ -54,3 +54,30 @@
         }
     </tbody>
 </table>
+@section Scripts {
+
+    <script>
+
+        $(document).ready(function () {
+            $('#productTable').DataTable({
+                paging: true,        // Enable pagination
+                searching: true,     // Enable search box
+                ordering: true,      // Enable column sorting
+                responsive: true,    // Enable responsive table
+                lengthMenu: [5, 10, 25, 50], // Page size options
+                language: {
+                    search: "Search Orders:", // Customize the search box placeholder
+                    lengthMenu: "Show _MENU_ entries",
+                    info: "Showing _START_ to _END_ of _TOTAL_ orders",
+                    paginate: {
+                        first: "First",
+                        last: "Last",
+                        next: "Next",
+                        previous: "Previous"
+                    }
+                }
+            });
+        });
+    </script>
+
+}

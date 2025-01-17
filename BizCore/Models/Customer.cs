@@ -9,7 +9,7 @@ namespace BizCore.Models
         public int CustomerId { get; set; }
 
         [Required(ErrorMessage = "Customer name is required.")]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         [Required(ErrorMessage = "Address is required.")]
         public string? Address { get; set; }

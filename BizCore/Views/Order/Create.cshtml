@@ -109,11 +109,28 @@
 
         let itemCount = @Model.Order.OrderItems.Count;
 
-        // Dynamically toggle Customer and Supplier fields based on Order Type
         document.getElementById("orderTypeSelect").addEventListener("change", function () {
             const orderType = this.value;
-            document.getElementById("customerDiv").style.display = orderType === "1" ? "block" : "none";
-            document.getElementById("supplierDiv").style.display = orderType === "2" ? "block" : "none";
+            const customerDiv = document.getElementById("customerDiv");
+            const supplierDiv = document.getElementById("supplierDiv");
+
+            const customerInput = document.querySelector("select[name='Order.CustomerId']");
+            const supplierInput = document.querySelector("select[name='Order.SupplierId']");
+
+            if (orderType === "1") { // Customer Order
+                customerDiv.style.display = "block";
+                supplierDiv.style.display = "none";
+                if (supplierInput) supplierInput.value = ""; // Clear Supplier input
+            } else if (orderType === "2") { // Supplier Order
+                customerDiv.style.display = "none";
+                supplierDiv.style.display = "block";
+                if (customerInput) customerInput.value = ""; // Clear Customer input
+            } else { // No valid selection
+                customerDiv.style.display = "none";
+                supplierDiv.style.display = "none";
+                if (customerInput) customerInput.value = ""; // Clear Customer input
+                if (supplierInput) supplierInput.value = ""; // Clear Supplier input
+            }
         });
 
         // Add a new order item row
@@ -188,5 +205,4 @@
             }
         }
     </script>
-
 }

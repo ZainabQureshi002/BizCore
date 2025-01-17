@@ -1,0 +1,53 @@
+﻿@{
+    ViewBag.Title = "Data Tables Overview";
+    var orderTable = ViewBag.OrderTable as System.Data.DataTable;
+    var customerTable = ViewBag.CustomerTable as System.Data.DataTable;
+}
+
+<h1>Data Tables</h1>
+
+<h2>Order Table</h2>
+<table border="1">
+    <thead>
+        <tr>
+            @foreach (System.Data.DataColumn column in orderTable.Columns)
+            {
+                <th>@column.ColumnName</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in orderTable.Rows)
+        {
+            <tr>
+                @foreach (var item in row.ItemArray)
+                {
+                    <td>@item</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<h2>Customer Table</h2>
+<table border="1">
+    <thead>
+        <tr>
+            @foreach (System.Data.DataColumn column in customerTable.Columns)
+            {
+                <th>@column.ColumnName</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (System.Data.DataRow row in customerTable.Rows)
+        {
+            <tr>
+                @foreach (var item in row.ItemArray)
+                {
+                    <td>@item</td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
